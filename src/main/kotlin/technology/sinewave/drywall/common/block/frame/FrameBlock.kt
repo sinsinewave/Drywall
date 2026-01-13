@@ -1,4 +1,4 @@
-package technology.sinewave.drywall.common.block.woodframe
+package technology.sinewave.drywall.common.block.frame
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import technology.sinewave.drywall.common.util.ShapeUtils
 
-class WoodFrameBlock(properties: Properties) : Block(properties), EntityBlock {
+class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
     companion object {
         val NORTH: BooleanProperty = BlockStateProperties.NORTH
         val EAST : BooleanProperty = BlockStateProperties.EAST
@@ -98,11 +98,13 @@ class WoodFrameBlock(properties: Properties) : Block(properties), EntityBlock {
         val west  = state.getValue(WEST)
 
         // TODO: Implement actually returning these, maybe as a map
+        // It is down the the BE to actually figure out the panel positions from this
+        // Not looking forward to writing that
     }
 
     private fun checkSide(side: Direction, pos: BlockPos, level: LevelAccessor): Boolean {
         val neighbour = level.getBlockState(pos.relative(side))
-        return neighbour.block is WoodFrameBlock || neighbour.isFaceSturdy(level, pos.relative(side), side.opposite)
+        return neighbour.block is FrameBlock || neighbour.isFaceSturdy(level, pos.relative(side), side.opposite)
     }
 
     override fun updateShape(
@@ -121,6 +123,6 @@ class WoodFrameBlock(properties: Properties) : Block(properties), EntityBlock {
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
-        return WoodFrameBlockEntity(pos, state)
+        return FrameBlockEntity(pos, state)
     }
 }

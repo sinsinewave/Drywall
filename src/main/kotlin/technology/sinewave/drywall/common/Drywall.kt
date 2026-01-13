@@ -4,9 +4,8 @@ import net.minecraft.client.Minecraft
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent
-import org.apache.logging.log4j.Level
+import net.neoforged.neoforge.registries.NewRegistryEvent
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import technology.sinewave.drywall.common.block.Blocks
@@ -18,7 +17,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
 object Drywall {
     const val ID = "drywall"
 
-    // the logger for our mod
+    // Common logger
     val LOGGER: Logger = LogManager.getLogger(ID)
 
     init {
@@ -35,16 +34,11 @@ object Drywall {
         })
     }
 
-    private fun onClientSetup(event: FMLClientSetupEvent) {
-        LOGGER.log(Level.INFO, "Initializing client...")
-    }
-
-    private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
-        LOGGER.log(Level.INFO, "Server starting...")
-    }
+    private fun onServerSetup(event: FMLDedicatedServerSetupEvent) { }
+    private fun onClientSetup(event: FMLClientSetupEvent) { }
 
     @SubscribeEvent
-    fun onCommonSetup(event: FMLCommonSetupEvent) {
-        LOGGER.log(Level.INFO, "Hello! This is working!")
+    fun registerRegistries(event: NewRegistryEvent) {
+        event.register(Registries.PANELS)
     }
 }

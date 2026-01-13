@@ -1,6 +1,6 @@
 {
   "textures": {
-    "0": "drywall:panel/debug"
+    "0": "drywall:block/panel/debug"
   },
   "elements": [
     {

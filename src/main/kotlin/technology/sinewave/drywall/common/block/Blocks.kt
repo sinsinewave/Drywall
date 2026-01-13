@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
-import technology.sinewave.drywall.common.block.woodframe.WoodFrameBlock
-import technology.sinewave.drywall.common.block.woodframe.WoodFrameBlockEntity
+import technology.sinewave.drywall.common.block.frame.FrameBlock
+import technology.sinewave.drywall.common.block.frame.FrameBlockEntity
 
 // THIS LINE IS REQUIRED FOR USING PROPERTY DELEGATES
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
@@ -22,15 +22,15 @@ object Blocks {
     val REGISTRY   : DeferredRegister.Blocks               = DeferredRegister.createBlocks(Drywall.ID)
     val BE_REGISTRY: DeferredRegister<BlockEntityType<*>?> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Drywall.ID)
 
-    val FRAME_BLOCK: DeferredBlock<Block> = REGISTRY.register("wood_frame") { -> WoodFrameBlock(
+    val FRAME_BLOCK: DeferredBlock<Block> = REGISTRY.register("wood_frame") { -> FrameBlock(
             BlockBehaviour.Properties.ofFullCopy(
             Blocks.OAK_PLANKS
         )
     )}
 
-    val FRAME_BE: DeferredBlockEntityType<WoodFrameBlockEntity> = BE_REGISTRY.register("wood_frame") { ->
+    val FRAME_BE: DeferredBlockEntityType<FrameBlockEntity> = BE_REGISTRY.register("wood_frame") { ->
         @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // Don't care, get nulled
-        BlockEntityType.Builder.of(::WoodFrameBlockEntity, FRAME_BLOCK.get()).build(null)
+        BlockEntityType.Builder.of(::FrameBlockEntity, FRAME_BLOCK.get()).build(null)
     }
 
     // Only used to deal with IDEA constantly fucking optimising away that one import

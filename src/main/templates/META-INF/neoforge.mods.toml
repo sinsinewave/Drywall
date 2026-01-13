@@ -2,7 +2,7 @@ modLoader     = "kotlinforforge"
 loaderVersion = "${loader_version_range}"
 license       = "${mod_license}"
 
-#issueTrackerURL="https://github.com/sinsinewave/drywall/issues"
+issueTrackerURL="https://github.com/sinsinewave/Drywall/issues"
 
 [[mods]]
 modId       = "${mod_id}"
