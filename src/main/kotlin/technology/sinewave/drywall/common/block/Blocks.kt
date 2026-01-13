@@ -1,0 +1,38 @@
+package technology.sinewave.drywall.common.block
+
+import net.minecraft.core.registries.Registries
+import technology.sinewave.drywall.common.Drywall
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.BlockBehaviour
+import net.neoforged.neoforge.registries.DeferredBlock
+import net.neoforged.neoforge.registries.DeferredHolder
+import net.neoforged.neoforge.registries.DeferredRegister
+import technology.sinewave.drywall.common.block.woodframe.WoodFrameBlock
+import technology.sinewave.drywall.common.block.woodframe.WoodFrameBlockEntity
+
+// THIS LINE IS REQUIRED FOR USING PROPERTY DELEGATES
+import thedarkcolour.kotlinforforge.neoforge.forge.getValue
+
+// The full type gets stupidly long when you stick the BE type in the generic, this makes it a bit less obnoxious
+typealias DeferredBlockEntityType<T> = DeferredHolder<BlockEntityType<*>?, BlockEntityType<T>>
+
+object Blocks {
+    val REGISTRY   : DeferredRegister.Blocks               = DeferredRegister.createBlocks(Drywall.ID)
+    val BE_REGISTRY: DeferredRegister<BlockEntityType<*>?> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Drywall.ID)
+
+    val FRAME_BLOCK: DeferredBlock<Block> = REGISTRY.register("wood_frame") { -> WoodFrameBlock(
+            BlockBehaviour.Properties.ofFullCopy(
+            Blocks.OAK_PLANKS
+        )
+    )}
+
+    val FRAME_BE: DeferredBlockEntityType<WoodFrameBlockEntity> = BE_REGISTRY.register("wood_frame") { ->
+        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // Don't care, get nulled
+        BlockEntityType.Builder.of(::WoodFrameBlockEntity, FRAME_BLOCK.get()).build(null)
+    }
+
+    // Only used to deal with IDEA constantly fucking optimising away that one import
+    init { DeferredHolder<Any, Any>::getValue }
+}

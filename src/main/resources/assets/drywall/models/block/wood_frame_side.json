@@ -1,0 +1,28 @@
+{
+	"textures": {
+		"0": "drywall:block/wood_frame",
+		"particle": "minecraft:block/oak_planks"
+	},
+	"elements": [
+		{
+			"from": [4, 13, 0],
+			"to": [12, 16, 4],
+			"faces": {
+				"east": {"uv": [7, 8, 10, 12], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [7, 12, 10, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [0, 12, 8, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 8, 4], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 0, 0],
+			"to": [12, 3, 4],
+			"faces": {
+				"east": {"uv": [7, 8, 10, 12], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [7, 12, 10, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [0, 12, 8, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 8, 4], "texture": "#0"}
+			}
+		}
+	]
+}

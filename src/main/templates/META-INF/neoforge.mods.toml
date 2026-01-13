@@ -1,0 +1,48 @@
+modLoader     = "kotlinforforge"
+loaderVersion = "${loader_version_range}"
+license       = "${mod_license}"
+
+#issueTrackerURL="https://github.com/sinsinewave/drywall/issues"
+
+[[mods]]
+modId       = "${mod_id}"
+version     = "${mod_version}"
+displayName = "${mod_name}"
+
+#updateJSONURL="https://change.me.example.invalid/updates.json"
+#displayURL   ="https://change.me.to.your.mods.homepage.example.invalid"
+# TODO: Logo/icon
+#logoFile="drywall.png"
+#credits=""
+authors     = "${mod_authors}"
+description = '''${mod_description}'''
+
+#[[mixins]]
+#config="${mod_id}.mixins.json"
+#[[accessTransformers]]
+#file="META-INF/accesstransformer.cfg"
+
+# NeoForge
+[[dependencies."${mod_id}"]]
+modId        = "neoforge"
+type         = "required"
+versionRange = "${neo_version_range}"
+ordering     = "NONE"
+side         = "BOTH"
+
+# Kotlin for Forge
+[[dependencies."${mod_id}"]]
+modId        = "kotlinforforge"
+type         = "required"
+versionRange = "${loader_version_range}"
+ordering     = "NONE"
+side         = "BOTH"
+
+# Minecraft itself
+[[dependencies."${mod_id}"]]
+modId        = "minecraft"
+type         = "required"
+versionRange = "${minecraft_version_range}"
+ordering     = "NONE"
+side         = "BOTH"
+
