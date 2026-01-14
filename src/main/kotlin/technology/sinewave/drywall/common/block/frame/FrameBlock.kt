@@ -2,8 +2,11 @@ package technology.sinewave.drywall.common.block.frame
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
@@ -12,9 +15,11 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
+import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
+import technology.sinewave.drywall.common.panel.Panels
 import technology.sinewave.drywall.common.util.ShapeUtils
 
 class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
@@ -91,15 +96,16 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         else { postShape }
     }
 
-    fun getLogicSides(state: BlockState) {
-        val north = state.getValue(NORTH)
-        val east  = state.getValue(EAST)
-        val south = state.getValue(SOUTH)
-        val west  = state.getValue(WEST)
-
-        // TODO: Implement actually returning these, maybe as a map
-        // It is down the the BE to actually figure out the panel positions from this
-        // Not looking forward to writing that
+    // Separate from just querying sides in case we have for example height variations in the frame model depending on configuration, like walls
+    fun getOpenSides(state: BlockState): Map<Direction, Boolean> {
+        return mapOf(
+            Direction.NORTH to state.getValue(NORTH),
+            Direction.EAST  to state.getValue(EAST),
+            Direction.SOUTH to state.getValue(SOUTH),
+            Direction.WEST  to state.getValue(WEST),
+            Direction.UP    to true,
+            Direction.DOWN  to false
+        )
     }
 
     private fun checkSide(side: Direction, pos: BlockPos, level: LevelAccessor): Boolean {
@@ -124,5 +130,22 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
         return FrameBlockEntity(pos, state)
+    }
+
+    // TODO:TEMPORARY
+    override fun useWithoutItem(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        player: Player,
+        hitResult: BlockHitResult
+    ): InteractionResult {
+        val be = level.getBlockEntity(pos) as FrameBlockEntity
+        val p = be.panels[hitResult.direction]
+        if (p == null) { be.panels[hitResult.direction] = Panels.DEBUG_PANEL.get() }
+        else { be.panels[hitResult.direction] = null }
+        be.setChanged()
+
+        return InteractionResult.SUCCESS_NO_ITEM_USED
     }
 }

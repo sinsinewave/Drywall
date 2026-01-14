@@ -16,7 +16,7 @@ object ShapeUtils {
             Direction.SOUTH -> Block.box(16.0-x2, y1, 16.0-z2, 16.0-x1, y2, 16.0-z1)
             Direction.WEST  -> Block.box(z1, y1, x1, z2, y2, x2)
             Direction.EAST  -> Block.box(16.0-z2, y1, 16.0-x2, 16.0-z1, y2, 16.0-x1)
-            else            -> throw RuntimeException("Invalid rotation for rotated box: ${facing.serializedName}")
+            else            -> throw RuntimeException("Invalid rotation for horizontally rotated box: ${facing.serializedName}")
         }
     }
 
