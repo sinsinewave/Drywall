@@ -25,7 +25,7 @@ object Blocks {
     val FRAME_BLOCK: DeferredBlock<Block> = REGISTRY.register("wood_frame") { -> FrameBlock(
             BlockBehaviour.Properties.ofFullCopy(
             Blocks.OAK_PLANKS
-        )
+        ).noOcclusion().forceSolidOn()
     )}
 
     val FRAME_BE: DeferredBlockEntityType<FrameBlockEntity> = BE_REGISTRY.register("wood_frame") { ->
