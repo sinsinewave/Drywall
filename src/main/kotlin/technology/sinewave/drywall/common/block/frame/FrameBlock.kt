@@ -92,6 +92,24 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         return Shapes.or(Shapes.empty(), *panelShapes.toTypedArray())
     }
 
+    // For some fucking inexplicable reason Mojang determines shadow casting around blocks on the basis of _this_
+    // And because I don't feel like writing a mixin for net.minecraft.client.renderer.block.ModelBlockRenderer.calculateShape
+    // I will just fuck with the collision shape instead
+    // Ugh
+    // Mojang why
+    override fun getCollisionShape(
+        state  : BlockState,
+        level  : BlockGetter,
+        pos    : BlockPos,
+        context: CollisionContext
+    ): VoxelShape {
+        // I certainly hope this shit works
+        if (context == CollisionContext.empty()) {
+            return Shapes.block()
+        }
+        return super.getCollisionShape(state, level, pos, context)
+    }
+
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val north = state.getValue(NORTH)
         val east  = state.getValue(EAST)
@@ -111,10 +129,6 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
             Shapes.or(postShape, *sides.toTypedArray())
         }
         else { postShape }, getPanelShapes(level, pos))
-    }
-
-    override fun propagatesSkylightDown(state: BlockState, level: BlockGetter, pos: BlockPos): Boolean {
-        return false
     }
 
     // TODO: See if this can be reworked to take into account which sides the panels are on specifically

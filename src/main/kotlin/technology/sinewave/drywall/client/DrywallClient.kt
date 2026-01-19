@@ -29,6 +29,6 @@ object DrywallClient {
 
     @SubscribeEvent
     fun registerBlockEntityRenderers(event: EntityRenderersEvent.RegisterRenderers) {
-        event.registerBlockEntityRenderer(Blocks.FRAME_BE.get()) { ctx -> FrameBlockEntityRenderer(ctx) }
+        event.registerBlockEntityRenderer(Blocks.FRAME_BE.get()) { ctx -> FrameBlockEntityRenderer() }
     }
 }

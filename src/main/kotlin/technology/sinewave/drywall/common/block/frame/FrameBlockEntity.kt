@@ -26,6 +26,10 @@ class FrameBlockEntity(
         Direction.entries.forEach { this.put(it, null) }
     }
 
+    infix fun hasPanelOn(dir: Direction): Boolean {
+        return panels[dir] != null
+    }
+
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
         val sides = tag.getCompound("Sides")
