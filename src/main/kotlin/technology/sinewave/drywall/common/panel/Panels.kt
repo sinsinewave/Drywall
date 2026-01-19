@@ -13,6 +13,7 @@ object Panels {
 
     // TODO: Automate item registration for these
     val DEBUG_PANEL: DeferredHolder<Panel, Panel> = REGISTRY.register("debug") { -> Panel() }
+    val DRYWALL_PANEL: DeferredHolder<Panel, Panel> = REGISTRY.register("drywall") { -> Panel() }
 
     // Only used to deal with IDEA constantly fucking optimising away that one import
     init { DeferredHolder<Any, Any>::getValue }

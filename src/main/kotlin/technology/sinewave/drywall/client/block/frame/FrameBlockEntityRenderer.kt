@@ -44,22 +44,24 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
                 // TODO: Some sort of null safety for this perhaps
                 val name = Registries.PANELS.getKey(it)!!
 
-                val sprite = Minecraft.getInstance().modelManager.getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(ResourceLocation.fromNamespaceAndPath(
+                val faceSprite = Minecraft.getInstance().modelManager.getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(ResourceLocation.fromNamespaceAndPath(
                     name.namespace,
-                    "block/panel/"+name.path
+                    "block/panel/${name.path}"
+                ))
+                val edgeSprite = Minecraft.getInstance().modelManager.getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(ResourceLocation.fromNamespaceAndPath(
+                name.namespace,
+                    "block/panel/${name.path}_edge"
                 ))
 
                 val quads = ArrayList<BakedQuad>()
 
                 // All get a full outer face
-                quads.add(QuadBuilder.quad(Direction.NORTH, sprite) {
+                quads.add(QuadBuilder.quad(Direction.NORTH, faceSprite) {
                     vertex(0,  16,  0,  16, 0)
                     vertex(16, 16,  0,  0,  0)
                     vertex(16, 0,   0,  0,  16)
                     vertex(0,  0,   0,  16, 16)
                 })
-
-
 
                 // Inner face is more complex
                 // Arguably we _could_ just let it clip
@@ -69,7 +71,7 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
                     if (blockEntity hasPanelOn neighbour) { offsets[idx] = 4 }
                 }
                 // Inner face with shrinking offsets applied
-                quads.add(QuadBuilder.quad(Direction.SOUTH, sprite) {
+                quads.add(QuadBuilder.quad(Direction.SOUTH, faceSprite) {
                     vertex(16-offsets[2], 16-offsets[1], 4,  16-offsets[2],  0+offsets[1])
                     vertex( 0+offsets[0], 16-offsets[1], 4,   0+offsets[0],  0+offsets[1])
                     vertex( 0+offsets[0],  0+offsets[3], 4,   0+offsets[0], 16-offsets[3])
@@ -77,18 +79,17 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
                 })
 
                 // Edging 😳
-                // TODO: Better texture with actual edges, for now they're just lopped off from the main texture for testing
                 // We can reuse the offsets from before for checking if the edge even needs rendering
                 // Left
-                if (offsets[0] == 0) { quads.add(QuadBuilder.quad(Direction.WEST, sprite) {
-                        vertex(0, 16-offsets[1], 4,  4,  0+offsets[1])
-                        vertex(0, 16,            0,  0,  0)
-                        vertex(0,  0,            0,  0, 16)
-                        vertex(0,  0+offsets[3], 4,  4, 16-offsets[3])
+                if (offsets[0] == 0) { quads.add(QuadBuilder.quad(Direction.WEST, edgeSprite) {
+                    vertex(0, 16-offsets[1], 4,  4,  0+offsets[1])
+                    vertex(0, 16,            0,  0,  0)
+                    vertex(0,  0,            0,  0, 16)
+                    vertex(0,  0+offsets[3], 4,  4, 16-offsets[3])
                 })}
 
                 // Up
-                if (offsets[1] == 0) { quads.add(QuadBuilder.quad(Direction.UP, sprite) {
+                if (offsets[1] == 0) { quads.add(QuadBuilder.quad(Direction.UP, edgeSprite) {
                     vertex(16-offsets[2], 16, 4,  4,  0+offsets[2])
                     vertex(16,            16, 0,  0,  0)
                     vertex( 0,            16, 0,  0, 16)
@@ -96,7 +97,7 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
                 })}
 
                 // Right
-                if (offsets[2] == 0) { quads.add(QuadBuilder.quad(Direction.WEST, sprite) {
+                if (offsets[2] == 0) { quads.add(QuadBuilder.quad(Direction.WEST, edgeSprite) {
                     vertex(16,  0+offsets[3], 4,  4,  0+offsets[3])
                     vertex(16,  0,            0,  0,  0)
                     vertex(16, 16,            0,  0, 16)
@@ -104,7 +105,7 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
                 })}
 
                 // Down
-                if (offsets[3] == 0) { quads.add(QuadBuilder.quad(Direction.DOWN, sprite) {
+                if (offsets[3] == 0) { quads.add(QuadBuilder.quad(Direction.DOWN, edgeSprite) {
                     vertex( 0+offsets[0], 0, 4,  4,  0+offsets[0])
                     vertex( 0,            0, 0,  0,  0)
                     vertex(16,            0, 0,  0, 16)
@@ -148,7 +149,7 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
     }
 
     // Neighbours of a panel direction in a fixed order/unwrap
-    // Order is left, up, right, down; top and down are assumed to have been rotated from north on X+
+    // Order is left, up, right, down; up and down are assumed to have been rotated from north on X+
     // Makes vertex fuckery a lot easier
     private val neighbourDirections = hashMapOf(
         Direction.DOWN  to arrayOf(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH),

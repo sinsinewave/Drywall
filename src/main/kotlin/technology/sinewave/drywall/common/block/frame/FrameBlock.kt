@@ -104,7 +104,7 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         context: CollisionContext
     ): VoxelShape {
         // I certainly hope this shit works
-        if (context == CollisionContext.empty()) {
+        if (context == CollisionContext.empty() && isOpaque(state, level, pos)) {
             return Shapes.block()
         }
         return super.getCollisionShape(state, level, pos, context)
@@ -131,13 +131,15 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         else { postShape }, getPanelShapes(level, pos))
     }
 
+    fun isOpaque(state: BlockState, level: BlockGetter, pos: BlockPos): Boolean {
+        val entity = (level.getBlockEntity(pos) ?: return false) as FrameBlockEntity
+        return entity.panels.values.count { it != null } >= 2
+    }
+
     // TODO: See if this can be reworked to take into account which sides the panels are on specifically
     override fun getLightBlock(state: BlockState, level: BlockGetter, pos: BlockPos): Int {
-        // If BE is missing for any reason, fail gracefully by returning an empty shape
-        val blockEntity = (level.getBlockEntity(pos) ?: return super.getLightBlock(state, level, pos)) as FrameBlockEntity
-
         // If the block has 2 or more panels, start blocking light
-        return if (blockEntity.panels.values.count { it != null } >= 2) {
+        return if (isOpaque(state, level, pos)) {
             level.maxLightLevel
         }
         else {
@@ -198,7 +200,7 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
     ): InteractionResult {
         val be = level.getBlockEntity(pos) as FrameBlockEntity
         val p = be.panels[hitResult.direction]
-        if (p == null) { be.panels[hitResult.direction] = Panels.DEBUG_PANEL.get() }
+        if (p == null) { be.panels[hitResult.direction] = Panels.DRYWALL_PANEL.get() }
         else { be.panels[hitResult.direction] = null }
         be.setChanged()
 
