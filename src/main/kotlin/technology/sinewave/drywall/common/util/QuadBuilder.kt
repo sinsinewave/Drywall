@@ -53,7 +53,7 @@ class QuadBuilder {
         fun quad(
             facing: Direction,
             sprite: TextureAtlasSprite,
-            shade : Boolean = false,
+            shade : Boolean = true,
             init  : QuadBuilder.() -> Unit
         ): BakedQuad {
             val builder = QuadBuilder()

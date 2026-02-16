@@ -16,16 +16,16 @@ import technology.sinewave.drywall.common.block.frame.FrameBlockEntity
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
 // The full type gets stupidly long when you stick the BE type in the generic, this makes it a bit less obnoxious
-typealias DeferredBlockEntityType<T> = DeferredHolder<BlockEntityType<*>?, BlockEntityType<T>>
+typealias DeferredBlockEntityType<T> = DeferredHolder<BlockEntityType<*>, BlockEntityType<T>>
 
 object Blocks {
-    val REGISTRY   : DeferredRegister.Blocks               = DeferredRegister.createBlocks(Drywall.ID)
-    val BE_REGISTRY: DeferredRegister<BlockEntityType<*>?> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Drywall.ID)
+    val REGISTRY   : DeferredRegister.Blocks              = DeferredRegister.createBlocks(Drywall.ID)
+    val BE_REGISTRY: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Drywall.ID)
 
     val FRAME_BLOCK: DeferredBlock<Block> = REGISTRY.register("wood_frame") { -> FrameBlock(
             BlockBehaviour.Properties.ofFullCopy(
             Blocks.OAK_PLANKS
-        ).noOcclusion()
+        )
     )}
 
     val FRAME_BE: DeferredBlockEntityType<FrameBlockEntity> = BE_REGISTRY.register("wood_frame") { ->

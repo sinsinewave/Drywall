@@ -20,8 +20,6 @@ object Items {
 
     val FRAME_BLOCK_ITEM: DeferredItem<BlockItem> = REGISTRY.registerSimpleBlockItem(Blocks.FRAME_BLOCK)
 
-
-
     init {
         // Register creative tab
         TAB_REGISTRY.register("drywall_group") { ->
