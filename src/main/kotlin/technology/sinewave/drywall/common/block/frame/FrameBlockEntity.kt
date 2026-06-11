@@ -30,6 +30,24 @@ class FrameBlockEntity(
         return panels[dir] != null
     }
 
+    fun checkAndSetBlockVariant() {
+        if (!hasLevel()) { return }
+
+        val newState = if (panels.values.all { it == null }) {
+            Blocks.EMPTY_FRAME_BLOCK.get().defaultBlockState()
+        }
+        else {
+            Blocks.SOLID_FRAME_BLOCK.get().defaultBlockState()
+        }
+
+        // This is probably atrocious practice but it does work
+        // Making it less atrocious is Future Sine's problem
+        this.blockState = newState
+        level!!.setBlock(blockPos, newState, 1 or 2)
+        level!!.setBlockEntity(this)
+        setChanged()
+    }
+
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
         val sides = tag.getCompound("Sides")

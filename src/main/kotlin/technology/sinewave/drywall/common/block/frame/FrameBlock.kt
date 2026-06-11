@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.phys.BlockHitResult
 import technology.sinewave.drywall.common.panel.Panels
 
-class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
+open class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
     companion object {
         val NORTH: BooleanProperty = BlockStateProperties.NORTH
         val EAST : BooleanProperty = BlockStateProperties.EAST
@@ -65,7 +65,6 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         pos         : BlockPos,
         neighbourPos: BlockPos
     ): BlockState {
-        level.getBlockEntity(pos)?.apply { (this as FrameBlockEntity).setChanged() }
         level.lightEngine.checkBlock(pos)
 
         return state
@@ -91,7 +90,7 @@ class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         val p = be.panels[hitResult.direction]
         if (p == null) { be.panels[hitResult.direction] = Panels.DRYWALL_PANEL.get() }
         else { be.panels[hitResult.direction] = null }
-        be.setChanged()
+        be.checkAndSetBlockVariant()
 
         level.lightEngine.checkBlock(pos)
         return InteractionResult.SUCCESS_NO_ITEM_USED

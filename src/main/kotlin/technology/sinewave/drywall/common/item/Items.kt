@@ -18,7 +18,8 @@ object Items {
     val REGISTRY    : DeferredRegister.Items            = DeferredRegister.createItems(Drywall.ID)
     val TAB_REGISTRY: DeferredRegister<CreativeModeTab> = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Drywall.ID)
 
-    val FRAME_BLOCK_ITEM: DeferredItem<BlockItem> = REGISTRY.registerSimpleBlockItem(Blocks.FRAME_BLOCK)
+    // We set this to the empty frame as that is what is actually placed
+    val FRAME_BLOCK_ITEM: DeferredItem<BlockItem> = REGISTRY.registerSimpleBlockItem(Blocks.EMPTY_FRAME_BLOCK)
 
     init {
         // Register creative tab
