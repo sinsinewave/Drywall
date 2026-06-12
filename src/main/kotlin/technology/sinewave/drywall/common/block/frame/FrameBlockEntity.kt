@@ -40,10 +40,14 @@ class FrameBlockEntity(
             Blocks.SOLID_FRAME_BLOCK.get().defaultBlockState()
         }
 
+        // Cancel early if the block doesn't need to be replaced
+        // That being mainly when adding panels to a block that already has panels
+        if (newState.block == blockState.block) { return }
+
         // This is probably atrocious practice but it does work
         // Making it less atrocious is Future Sine's problem
-        this.blockState = newState
-        level!!.setBlock(blockPos, newState, 1 or 2)
+        blockState = (blockState.block as FrameBlock).getStateForPosition(level!!, blockPos, newState)
+        level!!.setBlockAndUpdate(blockPos, blockState)
         level!!.setBlockEntity(this)
         setChanged()
     }

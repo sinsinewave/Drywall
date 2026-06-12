@@ -45,11 +45,7 @@ open class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
         val pos   = context.clickedPos
         val level = context.level
-        return this.defaultBlockState()
-            .setValue(NORTH, checkSide(Direction.NORTH, pos, level))
-            .setValue(EAST,  checkSide(Direction.EAST,  pos, level))
-            .setValue(SOUTH, checkSide(Direction.SOUTH, pos, level))
-            .setValue(WEST,  checkSide(Direction.WEST,  pos, level))
+        return getStateForPosition(level, pos)
     }
 
     private fun checkSide(side: Direction, pos: BlockPos, level: LevelAccessor): Boolean {
@@ -67,6 +63,14 @@ open class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
     ): BlockState {
         level.lightEngine.checkBlock(pos)
 
+        return getStateForPosition(level, pos, state)
+    }
+
+    fun getStateForPosition(
+        level: LevelAccessor,
+        pos  : BlockPos,
+        state: BlockState = this.defaultBlockState()
+    ): BlockState {
         return state
             .setValue(NORTH, checkSide(Direction.NORTH, pos, level))
             .setValue(EAST,  checkSide(Direction.EAST,  pos, level))

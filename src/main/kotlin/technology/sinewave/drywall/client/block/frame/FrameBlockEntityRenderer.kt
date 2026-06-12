@@ -21,6 +21,7 @@ import net.neoforged.neoforge.client.model.lighting.SmoothQuadLighter
 import org.joml.Matrix4f
 import technology.sinewave.drywall.common.Drywall
 import technology.sinewave.drywall.common.Registries
+import technology.sinewave.drywall.common.block.frame.EmptyFrameBlock
 import technology.sinewave.drywall.common.block.frame.FrameBlockEntity
 import technology.sinewave.drywall.common.util.QuadBuilder
 
@@ -46,6 +47,9 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
         light      : Int,
         overlay    : Int
     ) {
+        // Empty frames don't need panel rendering
+        if (blockEntity.blockState.block is EmptyFrameBlock) { return }
+
         val vertices = buffers.getBuffer(RenderType.cutout())
         lighter.setup(blockEntity.level!!, blockEntity.blockPos, blockEntity.blockState)
 

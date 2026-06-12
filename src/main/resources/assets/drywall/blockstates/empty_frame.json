@@ -1,7 +1,68 @@
 {
-  "variants" : {
-    "" : {
-      "model" : "minecraft:block/air"
+  "multipart" : [
+    {
+      "when" : {
+        "OR" : [
+          { "north": "false", "east": "false", "south": "false", "west": "false"},
+          { "north": "true",  "east":  "true"  },
+          { "east":  "true",  "south": "true"  },
+          { "south": "true",  "west":  "true"  },
+          { "west":  "true",  "north": "true"  },
+          { "north": "true",  "south": "false" },
+          { "north": "false", "south": "true"  },
+          { "east":  "true",  "west":  "false" },
+          { "east":  "false", "west":  "true"  }
+        ]
+      },
+      "apply" : { "model": "drywall:block/empty_frame_post" }
+    },
+    {
+      "when" : { "north": "true", "south": "true", "east": "false", "west": "false" },
+      "apply" : { "model": "drywall:block/empty_frame_straight" }
+    },
+    {
+      "when" : { "north": "false", "south": "false", "east": "true", "west": "true" },
+      "apply" : { "model": "drywall:block/empty_frame_straight", "y": 90 }
+    },
+    {
+      "when" : {
+        "OR" : [
+          { "north": "true", "east": "false|true", "south": "false", "west": "false|true" },
+          { "north": "true", "east": "true",       "south": "true",  "west": "false|true" },
+          { "north": "true", "east": "false|true", "south": "true",  "west": "true" }
+        ]
+      },
+      "apply" : { "model": "drywall:block/empty_frame_side" }
+    },
+    {
+      "when" : {
+        "OR" : [
+          { "north": "false|true", "east": "true", "south": "false|true", "west": "false" },
+          { "north": "true",       "east": "true", "south": "false|true", "west": "true" },
+          { "north": "false|true", "east": "true", "south": "true",       "west": "true" }
+        ]
+      },
+      "apply" : { "model": "drywall:block/empty_frame_side", "y": 90 }
+    },
+    {
+      "when" : {
+        "OR" : [
+          { "north": "false", "east": "false|true", "south": "true", "west": "false|true" },
+          { "north": "true",  "east": "true",       "south": "true", "west": "false|true" },
+          { "north": "true",  "east": "false|true", "south": "true", "west": "true" }
+        ]
+      },
+      "apply" : { "model": "drywall:block/empty_frame_side", "y": 180 }
+    },
+    {
+      "when" : {
+        "OR" : [
+          { "north": "false|true", "east": "false", "south": "false|true", "west": "true" },
+          { "north": "true",       "east": "true",  "south": "false|true", "west": "true" },
+          { "north": "false|true", "east": "true",  "south": "true",       "west": "true" }
+        ]
+      },
+      "apply" : { "model": "drywall:block/empty_frame_side", "y": 270 }
     }
-  }
+  ]
 }
