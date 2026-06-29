@@ -32,11 +32,24 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
         // TODO: Detect if player is using legacy lighting and use FlatQuadLighter in that case
         val lighter = SmoothQuadLighter(BlockColors.createDefault())
 
-        // Pre-define default "panel" texture, used when no panel on side
-        val nullSprite: TextureAtlasSprite = Minecraft.getInstance().modelManager.getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(ResourceLocation.fromNamespaceAndPath(
+        val sideSprite = Minecraft.getInstance().modelManager.getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(ResourceLocation.fromNamespaceAndPath(
             Drywall.ID,
-            "block/frame"
+            "block/solid_frame_side"
         ))
+
+        val topSprite = Minecraft.getInstance().modelManager.getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(ResourceLocation.fromNamespaceAndPath(
+            Drywall.ID,
+            "block/solid_frame_top"
+        ))
+
+        fun getSprite(direction: Direction): TextureAtlasSprite {
+            return if (direction.axis.isHorizontal) {
+                sideSprite
+            }
+            else {
+                topSprite
+            }
+        }
     }
 
     override fun render(
@@ -54,24 +67,20 @@ class FrameBlockEntityRenderer(): BlockEntityRenderer<FrameBlockEntity> {
         lighter.setup(blockEntity.level!!, blockEntity.blockPos, blockEntity.blockState)
 
         // Select either default non-panel texture, or retrieve panel's texture
+        // TODO: maybe implement 3D panels?
         for (panelEntry in blockEntity.panels) {
-            val sprite = if (panelEntry.value == null) {
-                nullSprite
-            }
-            else {
-                // Use default non-panel if the panel key is null
+            var sprite = getSprite(panelEntry.key)
+            if (panelEntry.value != null) {
+                // If panel
                 val name = Registries.PANELS.getKey(panelEntry.value!!)
                 if (name != null) {
-                    Minecraft.getInstance().modelManager
+                    sprite = Minecraft.getInstance().modelManager
                         .getAtlas(InventoryMenu.BLOCK_ATLAS)
                         .getSprite(ResourceLocation.fromNamespaceAndPath(
                             name.namespace,
                             "block/panel/${name.path}"
                         )
                     )
-                }
-                else {
-                    nullSprite
                 }
             }
 

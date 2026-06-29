@@ -1,6 +1,6 @@
 {
 	"textures": {
-		"0": "drywall:block/frame",
+		"0": "drywall:block/solid_frame_side",
 		"1": "drywall:block/chipboard",
 		"particle": "minecraft:block/oak_planks"
 	},

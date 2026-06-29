@@ -23,6 +23,8 @@ open class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         val EAST : BooleanProperty = BlockStateProperties.EAST
         val SOUTH: BooleanProperty = BlockStateProperties.SOUTH
         val WEST : BooleanProperty = BlockStateProperties.WEST
+        val UP   : BooleanProperty = BlockStateProperties.UP
+        val DOWN : BooleanProperty = BlockStateProperties.DOWN
     }
 
     init {
@@ -31,6 +33,8 @@ open class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
             .setValue(EAST,  false)
             .setValue(SOUTH, false)
             .setValue(WEST,  false)
+            .setValue(UP,    false)
+            .setValue(DOWN,  false)
         )
     }
 
@@ -40,17 +44,40 @@ open class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
             .add(EAST)
             .add(SOUTH)
             .add(WEST)
+            .add(UP)
+            .add(DOWN)
+    }
+
+    private fun checkSide(side: Direction, pos: BlockPos, level: LevelAccessor): Boolean {
+        val neighbour = level.getBlockState(pos.relative(side))
+
+        return if (neighbour.block !is FrameBlock) {
+            neighbour.isFaceSturdy(level, pos.relative(side), side.opposite)
+        }
+        else {
+            val be = level.getBlockEntity(pos.relative(side)) as FrameBlockEntity
+            (be hasPanelOn side.opposite).not()
+        }
+    }
+
+    fun getStateForPosition(
+        level: LevelAccessor,
+        pos  : BlockPos,
+        state: BlockState = this.defaultBlockState()
+    ): BlockState {
+        return state
+            .setValue(NORTH, checkSide(Direction.NORTH, pos, level))
+            .setValue(EAST,  checkSide(Direction.EAST,  pos, level))
+            .setValue(SOUTH, checkSide(Direction.SOUTH, pos, level))
+            .setValue(WEST,  checkSide(Direction.WEST,  pos, level))
+            .setValue(UP,    checkSide(Direction.UP,    pos, level))
+            .setValue(DOWN,  checkSide(Direction.DOWN,  pos, level))
     }
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
         val pos   = context.clickedPos
         val level = context.level
         return getStateForPosition(level, pos)
-    }
-
-    private fun checkSide(side: Direction, pos: BlockPos, level: LevelAccessor): Boolean {
-        val neighbour = level.getBlockState(pos.relative(side))
-        return neighbour.block is FrameBlock || neighbour.isFaceSturdy(level, pos.relative(side), side.opposite)
     }
 
     override fun updateShape(
@@ -64,18 +91,6 @@ open class FrameBlock(properties: Properties) : Block(properties), EntityBlock {
         level.lightEngine.checkBlock(pos)
 
         return getStateForPosition(level, pos, state)
-    }
-
-    fun getStateForPosition(
-        level: LevelAccessor,
-        pos  : BlockPos,
-        state: BlockState = this.defaultBlockState()
-    ): BlockState {
-        return state
-            .setValue(NORTH, checkSide(Direction.NORTH, pos, level))
-            .setValue(EAST,  checkSide(Direction.EAST,  pos, level))
-            .setValue(SOUTH, checkSide(Direction.SOUTH, pos, level))
-            .setValue(WEST,  checkSide(Direction.WEST,  pos, level))
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {

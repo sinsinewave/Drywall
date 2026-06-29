@@ -23,7 +23,7 @@ object Blocks {
     val REGISTRY   : DeferredRegister.Blocks              = DeferredRegister.createBlocks(Drywall.ID)
     val BE_REGISTRY: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Drywall.ID)
 
-    val SOLID_FRAME_BLOCK: DeferredBlock<Block> = REGISTRY.register("wood_frame") { -> FrameBlock(
+    val SOLID_FRAME_BLOCK: DeferredBlock<Block> = REGISTRY.register("solid_frame") { -> FrameBlock(
             BlockBehaviour.Properties.ofFullCopy(
             Blocks.OAK_PLANKS
         )
@@ -36,7 +36,7 @@ object Blocks {
         )
     }
 
-    val FRAME_BE: DeferredBlockEntityType<FrameBlockEntity> = BE_REGISTRY.register("wood_frame") { ->
+    val FRAME_BE: DeferredBlockEntityType<FrameBlockEntity> = BE_REGISTRY.register("frame") { ->
         @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // Don't care, get nulled
         BlockEntityType.Builder.of(::FrameBlockEntity, SOLID_FRAME_BLOCK.get(), EMPTY_FRAME_BLOCK.get()).build(null)
     }
